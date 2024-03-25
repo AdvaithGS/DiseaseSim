@@ -11,32 +11,36 @@ InfRate = 0.2
 DetRate = 0.8
 FramesRecover = 500
 Quarn = False
+
+#colors
+WHITE = (255,255,255)
+BLACK = (0,0,0)
 # Creates first pool object
 quarantine = prt.pool(e = 1)
-quarantine.setdomain(((-450,100), (-200,-100)))
+quarantine.setdomain(((-450,100), (-200,-100)),WHITE)
 
 # Creates second pool object
 pool1 = prt.pool(e = 1)
-pool1.setdomain(((-150, 375), (150, 50)))
+pool1.setdomain(((-150, 375), (150, 50)),WHITE)
 
 pool2 = prt.pool(e = 1)
-pool2.setdomain(((-150,0), (150, -325)))
+pool2.setdomain(((-150,0), (150, -325)),WHITE)
 
 pool3 = prt.pool(e = 1)
-pool3.setdomain(((175,375), (475, 50)))
+pool3.setdomain(((175,375), (475, 50)),WHITE)
 
 pool4 = prt.pool(e = 1)
-pool4.setdomain(((175,0), (475, -325)))
+pool4.setdomain(((175,0), (475, -325)),WHITE)
 
 #Background
 background = prt.pool(e = 1)
-background.setdomain(((-500,400), (500, -400)))
+background.setdomain(((-500,400), (500, -400)),color = BLACK)
 
 # Initializes particles randomly
-pool1.random(NumParticles, Speed, 7)
-pool2.random(NumParticles, Speed, 7)
-pool3.random(NumParticles, Speed, 7)
-pool4.random(NumParticles, Speed, 7)
+pool1.random(1, Speed, 7)
+# pool2.random(NumParticles, Speed, 7)
+# pool3.random(NumParticles, Speed, 7)
+# pool4.random(NumParticles, Speed, 7)
 
 def Quarantine():
 	global Quarn
@@ -57,9 +61,9 @@ def Quarantine():
 
 pools = [pool1,pool2,pool3,pool4,quarantine,background]
 
-for i in sample(pool1.particles + pool2.particles,NumInfected):
-	i.status = "Infected"
-	i.infected = 0
+# for i in sample(pool1.particles + pool2.particles,NumInfected):
+# 	i.status = "Infected"
+# 	i.infected = 0
 
 
 started = False
@@ -79,6 +83,8 @@ buttons = [gui.Button(60, 100, 200, 50, 'Start', Start),gui.Button(60, 30, 200, 
         'hover': '#660000',
         'pressed': '#330000',
     })]
+for pool in pools:
+	print(((pool.cont.x0+pool.cont.x1)/2,(pool.cont.y0+pool.cont.y1)/2))
 
 while True:
 	i += 1
@@ -90,12 +96,15 @@ while True:
 			pygame.quit()
 			quit()
 
+	if i == 1000:
+		pool1.particles[0].move(pool2,background)
+
 	for b in buttons:
 			b.process(i)
 
 	for x in pools:
 		if(i == 1):
-			x.update(InfRate,FramesRecover,Quarn, DetRate,quarantine)	
+			x.update(InfRate,FramesRecover,Quarn, DetRate,quarantine)
 		gui.drawpool(x)
 
 	if(started):
