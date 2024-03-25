@@ -15,34 +15,64 @@ Quarn = False
 quarantine = prt.pool(e = 1)
 quarantine.setdomain(((-450,100), (-200,-100)))
 
-background = prt.pool(e = 1)
-background.setdomain(((-500,400), (-500,400)))
-
 # Creates second pool object
 pool1 = prt.pool(e = 1)
-pool1.setdomain(((0,200), (450,-200)))
+pool1.setdomain(((-150, 375), (150, 50)))
+
+pool2 = prt.pool(e = 1)
+pool2.setdomain(((-150,0), (150, -325)))
+
+pool3 = prt.pool(e = 1)
+pool3.setdomain(((175,375), (475, 50)))
+
+pool4 = prt.pool(e = 1)
+pool4.setdomain(((175,0), (475, -325)))
 
 # Initializes particles randomly
-pool1.random(NumParticles, Speed, 12)
+pool1.random(NumParticles, Speed, 7)
+pool2.random(NumParticles, Speed, 7)
+pool3.random(NumParticles, Speed, 7)
+pool4.random(NumParticles, Speed, 7)
 
 def Quarantine():
 	global Quarn
-	Quarn = True
+	Quarn = not Quarn
+	if(buttons[1].fillColors['normal'] == "#ff0000"):
+		buttons[1].fillColors = {
+        'normal': '#00ff00',
+        'hover': '#006600',
+        'pressed': '#003300',
+    }
+	else:
+		buttons[1].fillColors = {
+        'normal': '#ff0000',
+        'hover': '#660000',
+        'pressed': '#330000',
+    }
 
 for i in sample(pool1.particles,NumInfected):
 	i.status = "Infected"
 	i.infected = 0
 
-pools = [pool1,quarantine]
+pools = [pool1,pool2,pool3,pool4,quarantine]
 
 started = False
+i = 0
 
 def Start():
 	global started
 	started = not started
+	if(buttons[0].buttonText == "Start"):
+		buttons[0].buttonText = "Pause"
+	elif buttons[0].buttonText == "Pause":
+		buttons[0].buttonText = "Resume"
 
-i = 0 
-buttons = [gui.Button(30, 200, 400, 100, 'Button One', Start),gui.Button(30, 30, 150, 100, 'Button One', Quarantine)]
+
+buttons = [gui.Button(60, 100, 200, 50, 'Start', Start),gui.Button(60, 30, 200, 50, 'Quarantine', Quarantine,fillColors = {
+        'normal': '#ff0000',
+        'hover': '#660000',
+        'pressed': '#330000',
+    })]
 
 while True:
 	i += 1
@@ -54,7 +84,8 @@ while True:
 			pygame.quit()
 			quit()
 
-	buttons[0].process(i)
+	for b in buttons:
+			b.process(i)
 
 	for x in pools:
 		if(i == 1):
