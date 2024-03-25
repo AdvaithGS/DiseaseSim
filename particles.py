@@ -12,7 +12,7 @@ class particle:
 		self.infected = 0
 		self.pool = pool
 		self.r = r
-		self.color = (255,0,0)
+		self.color = (0,0,255)
 		self.container = None
 
 	def update(self,frames,quarn):

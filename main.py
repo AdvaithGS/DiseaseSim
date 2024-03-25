@@ -28,6 +28,10 @@ pool3.setdomain(((175,375), (475, 50)))
 pool4 = prt.pool(e = 1)
 pool4.setdomain(((175,0), (475, -325)))
 
+#Background
+background = prt.pool(e = 1)
+background.setdomain(((-500,400), (500, -400)))
+
 # Initializes particles randomly
 pool1.random(NumParticles, Speed, 7)
 pool2.random(NumParticles, Speed, 7)
@@ -50,11 +54,13 @@ def Quarantine():
         'pressed': '#330000',
     }
 
-for i in sample(pool1.particles,NumInfected):
+
+pools = [pool1,pool2,pool3,pool4,quarantine,background]
+
+for i in sample(pool1.particles + pool2.particles,NumInfected):
 	i.status = "Infected"
 	i.infected = 0
 
-pools = [pool1,pool2,pool3,pool4,quarantine]
 
 started = False
 i = 0
