@@ -1,11 +1,11 @@
 import pygame 
-import time
+import particles
 
 pygame.init()
 
 # inizializzazione pygame e finestra
 
-WIDTH, HEIGHT = 1000, 1000
+WIDTH, HEIGHT = 1000, 800
 OFFW, OFFH = WIDTH//2, HEIGHT//2
 
 WHITE = 255,255,255
@@ -25,6 +25,7 @@ class Button():
 		self.onclickFunction = onclickFunction
 		self.onePress = onePress
 		self.alreadyPressed = False
+		self.LastPressed = 0
 		self.fillColors = {
         'normal': '#ffffff',
         'hover': '#666666',
@@ -34,18 +35,20 @@ class Button():
 		self.buttonRect = pygame.Rect(self.x, self.y, self.width, self.height)
 		self.buttonSurf = font.render(buttonText, True, (20, 20, 20))
 
-	def process(self):
+	def process(self,n):
 		mousePos = pygame.mouse.get_pos()
 		self.buttonSurface.fill(self.fillColors['normal'])
 		if self.buttonRect.collidepoint(mousePos):
 			self.buttonSurface.fill(self.fillColors['hover'])
 			if pygame.mouse.get_pressed(num_buttons=3)[0]:
 				self.buttonSurface.fill(self.fillColors['pressed'])
-				if self.onePress:
+				if self.onePress and (n-self.LastPressed) > 15:
 					self.onclickFunction()
-				elif not self.alreadyPressed:
+					self.LastPressed = n
+				elif not self.alreadyPressed and (n-self.LastPressed) > 15:
 					self.onclickFunction()
 					self.alreadyPressed = True
+					self.LastPressed = n
 				else:
 					self.alreadyPressed = False
 					
@@ -63,7 +66,7 @@ def drawpool(pool):
 		pygame.draw.circle(schermo, p.color, (int(p.x) + OFFW, -int(p.y) + OFFH), int(p.r))
 
 	for b in pool.obstacles:
-		if type(b) == prt.barrier:
+		if type(b) == particles.barrier:
 			if b.axys == 1:
 				pygame.draw.line(schermo, b.color, (int(b.x0) + OFFW, -int(b.y) + OFFH), (int(b.x1) + OFFW, -int(b.y) + OFFH), 4)
 			elif b.axys == 0:

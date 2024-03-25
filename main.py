@@ -15,6 +15,9 @@ Quarn = False
 quarantine = prt.pool(e = 1)
 quarantine.setdomain(((-450,100), (-200,-100)))
 
+background = prt.pool(e = 1)
+background.setdomain(((-500,400), (-500,400)))
+
 # Creates second pool object
 pool1 = prt.pool(e = 1)
 pool1.setdomain(((0,200), (450,-200)))
@@ -39,7 +42,7 @@ def Start():
 	started = not started
 
 i = 0 
-buttons = [gui.Button(30, 200, 400, 100, 'Button One (onePress)', Start),gui.Button(30, 30, 200, 100, 'Button One (onePress)', Quarantine)]
+buttons = [gui.Button(30, 200, 400, 100, 'Button One', Start),gui.Button(30, 30, 150, 100, 'Button One', Quarantine)]
 
 while True:
 	i += 1
@@ -51,13 +54,17 @@ while True:
 			pygame.quit()
 			quit()
 
-	buttons[0].process()	
-	for p in pools:
-		gui.drawpool(p)
+	buttons[0].process(i)
+
+	for x in pools:
+		if(i == 1):
+			x.update(InfRate,FramesRecover,Quarn, DetRate,quarantine)	
+		gui.drawpool(x)
+
 	if(started):
 		# Updates and renders all pools
 		for b in buttons:
-			b.process()
+			b.process(i)
 
 		for p in pools:
 			p.update(InfRate,FramesRecover,Quarn, DetRate,quarantine)
