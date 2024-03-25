@@ -67,6 +67,7 @@ def update(background = (0,0,0)):
 def drawpool(pool):
 	for p in pool.particles:
 		pygame.draw.circle(schermo, p.color, (int(p.x) + OFFW, -int(p.y) + OFFH), int(p.r))
+	pygame.draw.circle(schermo,(0,255,0),((pool.cont.x0+pool.cont.x1)/2,(pool.cont.y0+pool.cont.y1)/2),5)
 
 	for b in pool.obstacles:
 		if type(b) == particles.barrier:
