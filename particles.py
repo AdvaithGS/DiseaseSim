@@ -13,7 +13,22 @@ class particle:
 		self.pool = pool
 		self.r = r
 		self.color = (0,0,255)
-		self.container = None
+		self.transit = False
+
+	def move(self,new_pool,background):
+		self.pool.removepcl(self)
+		self.pool = background
+		background.particles.append(self)
+		self.transit = new_pool
+		velocity = math.sqrt(self.xv**2  + self.yv**2)
+		unit = [(new_pool.cont.x0 + new_pool.cont.x1)/2 - self.x,(new_pool.cont.y0 + new_pool.cont.y1)/2 - self.y]
+		unit[0] /= math.sqrt(unit[0]**2 + unit[1]**2)
+		unit[1] /= math.sqrt(unit[0]**2 + unit[1]**2)
+		print(self.xv,self.yv)
+		self.xv = velocity*unit[0]
+		self.yv = velocity*unit[1]
+		print(self.xv,self.yv)
+
 
 	def update(self,frames,quarn):
 		self.x += self.xv
@@ -23,6 +38,12 @@ class particle:
 		if(self.status == "Infected" and self.infected > frames):
 			self.status = "Recovered"
 			self.infected = 0
+		if(self.transit):
+			if(self.transit.cont.x0 <= self.x  and self.x <= self.transit.cont.x1 and self.transit.cont.y0 <= self.y and self.y <= self.transit.cont.y1):
+				self.pool.removepcl(self)
+				self.pool = self.transit
+				self.transit.particles.append(self)
+
 
 		self.color = getcolor(self.status)
 
@@ -124,12 +145,13 @@ class barrier(obstacle):
 				p.xv = - p.xv * E * self.e
 
 class _container(obstacle):
-	def __init__(self, rect):
+	def __init__(self, rect,color):
 		self.rect = rect
 		self.x0 = rect[0][0]
 		self.y0 = rect[0][1]
 		self.x1 = rect[1][0]
 		self.y1 = rect[1][1]
+		self.color = color
 
 	def collide(self, p, E):
 		if p.y + p.r > self.y0:
@@ -147,14 +169,14 @@ class _container(obstacle):
 
 class pool:
 
-	def __init__(self, e = 1, *particles):
+	def __init__(self, e = 1,*particles):
 		self.particles = []
 		self.obstacles = []
-		self.cont = _container(((-10000,10000), (10000,-10000)))
+		self.cont = _container(((-10000,10000), (10000,-10000)),(255,255,255))
 		self.e = e
 		for p in particles:
 			self.add(p)
-
+	
 	def add(self, body):
 		if issubclass(type(body), obstacle):
 			self.obstacles.append(body)
@@ -177,8 +199,8 @@ class pool:
 				b.collide(p, e)
 			self.cont.collide(p, e)
 
-	def setdomain(self, rect):
-		self.cont = _container(rect)
+	def setdomain(self, rect,color):
+		self.cont = _container(rect,color)
 
 	def removeob(self, tag):
 		self.obstacles = [item for item in self.obstacles if item.tag != tag]
