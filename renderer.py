@@ -14,10 +14,14 @@ schermo = pygame.display.set_mode((WIDTH, HEIGHT))
 
 pygame.display.set_caption('Particles')
 
-font = pygame.font.SysFont('Arial', 40)
+font = pygame.font.SysFont('Roboto', 40)
 
 class Button():
-	def __init__(self, x, y, width, height, buttonText='Button', onclickFunction=None, onePress=False):
+	def __init__(self, x, y, width, height, buttonText='Button', onclickFunction=None, onePress=False, fillColors : dict  = {
+        'normal': '#ffffff',
+        'hover': '#666666',
+        'pressed': '#333333',
+    }):
 		self.x = x
 		self.y = y
 		self.width = width
@@ -26,14 +30,12 @@ class Button():
 		self.onePress = onePress
 		self.alreadyPressed = False
 		self.LastPressed = 0
-		self.fillColors = {
-        'normal': '#ffffff',
-        'hover': '#666666',
-        'pressed': '#333333',
-    }
+		self.fillColors = fillColors
+		self.buttonText = buttonText
 		self.buttonSurface = pygame.Surface((self.width, self.height))
 		self.buttonRect = pygame.Rect(self.x, self.y, self.width, self.height)
-		self.buttonSurf = font.render(buttonText, True, (20, 20, 20))
+		self.buttonSurf = font.render(self.buttonText, True, (20, 20, 20))
+		# self.buttonRect = self.buttonSurf.get_rect(center = (self.x,self.y))
 
 	def process(self,n):
 		mousePos = pygame.mouse.get_pos()
@@ -51,8 +53,9 @@ class Button():
 					self.LastPressed = n
 				else:
 					self.alreadyPressed = False
-					
+		self.buttonSurf = font.render(self.buttonText, True, (20, 20, 20))
 		schermo.blit(self.buttonSurface, self.buttonRect)
+		schermo.blit(self.buttonSurf, self.buttonRect)
 
 schermo.fill(WHITE)
 
