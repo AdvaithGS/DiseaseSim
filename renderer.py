@@ -44,10 +44,10 @@ class Button():
 			self.buttonSurface.fill(self.fillColors['hover'])
 			if pygame.mouse.get_pressed(num_buttons=3)[0]:
 				self.buttonSurface.fill(self.fillColors['pressed'])
-				if self.onePress and (n-self.LastPressed) > 15:
+				if self.onePress and (n-self.LastPressed) >= 30:
 					self.onclickFunction()
 					self.LastPressed = n
-				elif not self.alreadyPressed and (n-self.LastPressed) > 15:
+				elif not self.alreadyPressed and (n-self.LastPressed) >= 30:
 					self.onclickFunction()
 					self.alreadyPressed = True
 					self.LastPressed = n
@@ -67,7 +67,7 @@ def update(background = (0,0,0)):
 def drawpool(pool):
 	for p in pool.particles:
 		pygame.draw.circle(schermo, p.color, (int(p.x) + OFFW, -int(p.y) + OFFH), int(p.r))
-	pygame.draw.circle(schermo,(0,255,0),((pool.cont.x0+pool.cont.x1)/2,(pool.cont.y0+pool.cont.y1)/2),5)
+	# pygame.draw.circle(schermo,(0,255,0),(pool.cont.x0,pool.cont.y0),5)
 
 	for b in pool.obstacles:
 		if type(b) == particles.barrier:
