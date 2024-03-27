@@ -11,7 +11,7 @@ InfRate = 0.8
 DetRate = 0.8
 FramesRecover = 700
 Quarn = False
-
+GraphInterval = 10
 #colors
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -107,16 +107,16 @@ while True:
 
 	for b in buttons:
 			b.process(i)
-	d = [0,0,0]
+	d[0] = 0; d[1] = 0;d[2] = 0
 
 	for p in pools:
 		if(i == 1):
 			p.update(InfRate,FramesRecover,Quarn, DetRate,quarantine,background)
-		gui.drawpool(p)
 		for x in p.particles:
 			d[{"Susceptible":0,"Infected":1,"Recovered":2}[x.status]] += 1
+		gui.drawpool(p)
 	
-	gui.drawgraph(d,played_frames,NumParticles*4,history,new=(played_frames%10==0 and started and played_frames < 2985))	
+	gui.drawgraph(d,played_frames,NumParticles*4,history,(played_frames%10==0 and started and played_frames < 296*GraphInterval),GraphInterval)	
 
 	if(started):
 		played_frames += 1
@@ -125,10 +125,9 @@ while True:
 				pass
 			x.move(choice([i for i in particle_pools if i != x.pool]),background)
 
-		
+
 		for p in pools:
 			p.update(InfRate,FramesRecover,Quarn, DetRate,quarantine,background)
-			gui.drawpool(p) 
 		
 		if(d[2]/(NumParticles*4) >= 0.75):
 			moving = False

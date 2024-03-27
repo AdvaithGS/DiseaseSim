@@ -84,12 +84,12 @@ def offsetrect(rect, dx, dy):
 
 # pool5 = prt.pool(e = 1,name = "Pool 4")
 # pool5.setdomain(((-475,-100), (-175, -325)),WHITE)
-def drawgraph(d,frame,NumTotal,history,new):
-	frame = frame/10
+def drawgraph(d,frame,NumTotal,history,new,interval):
+	frame = frame/interval
 	if(new):
 		history.append((round(220*d[1]/NumTotal),round(220*d[0]/NumTotal))) #infected, susceptible
 	for i in range(len(history)):
-		pygame.draw.line(schermo,(255,0,0),(27+i,723), (27+i, 723 - history[i][0])) 
-		pygame.draw.line(schermo,(0,0,255),(27+i, 723 - history[i][0]), (27+i, 723 - history[i][0] - history[i][1] ))
-		pygame.draw.line(schermo,(128,128,128),(27+i, 723 - history[i][0] - history[i][1] ), (27+i, 503) )
+		pygame.draw.line(schermo,(200,0,0),(27+i,723), (27+i, 723 - history[i][0])) 
+		pygame.draw.line(schermo,(0,0,200),(27+i, 723 - history[i][0]), (27+i, 723 - history[i][0] - history[i][1] ))
+		pygame.draw.line(schermo,(128,128,128),(27+ i, 723 - history[i][0] - history[i][1] ), (27+i, 503) )
 	
