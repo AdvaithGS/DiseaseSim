@@ -5,10 +5,11 @@ from random import sample,choice
 
 NumInfected = 1
 NumParticles = 20
-Speed = 3
+Move_Freq = 75
+Speed = 2
 InfRate = 0.8
 DetRate = 0.8
-FramesRecover = 500
+FramesRecover = 700
 Quarn = False
 
 #colors
@@ -16,7 +17,7 @@ WHITE = (255,255,255)
 BLACK = (0,0,0)
 # Creates first pool object
 quarantine = prt.pool(e = 1,name = "Quarantine")
-quarantine.setdomain(((-450,100), (-200,-100)),WHITE)
+quarantine.setdomain(((-450,200), (-200,0)),WHITE)
 
 # Creates second pool object
 pool1 = prt.pool(e = 1,name = "Pool 1")
@@ -34,6 +35,10 @@ pool4.setdomain(((175,0), (475, -325)),WHITE)
 #Background
 background = prt.pool(collisions= False,e = 1,name = "Background")
 background.setdomain(((-500,400), (500, -400)),color = BLACK)
+
+pool5 = prt.pool(e = 1,name = "Pool 5")
+pool5.setdomain(((-475,-100), (-175, -325)),WHITE)
+
 
 # Initializes particles randomly
 pool1.random(NumParticles, Speed, 7)
@@ -58,7 +63,7 @@ def Quarantine():
     }
 
 
-pools = [pool1,pool2,pool3,pool4,quarantine,background]
+pools = [pool1,pool2,pool3,pool4,pool5,quarantine,background]
 particle_pools  = [pool1,pool2,pool3,pool4]
 
 for i in sample(pool1.particles + pool2.particles,NumInfected):
@@ -86,15 +91,13 @@ buttons = [gui.Button(60, 100, 200, 50, 'Start', Start),gui.Button(60, 30, 200, 
         'pressed': '#330000',
     })]
 
+played_frames = 0
+d :list = [0,0,0] #S,I,R
+moving = True
+history = []
 while True:
 	i += 1
 	pygame.time.Clock().tick(144)
-	if(not(i%100)):
-		while((x:=choice(choice(particle_pools).particles)).status == "Recovered"):
-			pass
-		x.move(choice([i for i in particle_pools if i != x.pool]),background)
-
-
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 			pygame.display.quit()
@@ -104,19 +107,30 @@ while True:
 
 	for b in buttons:
 			b.process(i)
+	d = [0,0,0]
 
-	for x in pools:
+	for p in pools:
 		if(i == 1):
-			x.update(InfRate,FramesRecover,Quarn, DetRate,quarantine,background)
-		gui.drawpool(x)
+			p.update(InfRate,FramesRecover,Quarn, DetRate,quarantine,background)
+		gui.drawpool(p)
+		for x in p.particles:
+			d[{"Susceptible":0,"Infected":1,"Recovered":2}[x.status]] += 1
+	
+	gui.drawgraph(d,played_frames,NumParticles*4,history,new=(played_frames%10==0 and started and played_frames < 2985))	
 
 	if(started):
-		# Updates and renders all pools
-		for b in buttons:
-			b.process(i)
+		played_frames += 1
+		if(moving and not(played_frames%Move_Freq)):
+			while((x:=choice(choice(particle_pools).particles)).status == "Recovered"):
+				pass
+			x.move(choice([i for i in particle_pools if i != x.pool]),background)
 
+		
 		for p in pools:
 			p.update(InfRate,FramesRecover,Quarn, DetRate,quarantine,background)
 			gui.drawpool(p) 
-
+		
+		if(d[2]/(NumParticles*4) >= 0.75):
+			moving = False
+	
 	gui.update() # Updates screenclear
