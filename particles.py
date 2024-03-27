@@ -16,6 +16,7 @@ class particle:
 		self.transit = False
 
 	def move(self,new_pool,background):
+		print("Move:",self.pool,new_pool)
 		self.pool.removepcl(self)
 		self.pool = background
 		background.particles.append(self)
@@ -77,11 +78,13 @@ class particle:
 					self.infected = 0
 					if(quarn and random() <= detection):
 						self.move(quarantine,background)
+						print(self.status,"Quarantine")
 				else:
 					body.status = "Infected"
 					body.infected = 0
 					if(quarn and random() <= detection):
 						body.move(quarantine,background)
+						print(body.status,"Quarantine")
 
 
 def clamp(n, min, max):
@@ -162,14 +165,18 @@ class _container(obstacle):
 
 class pool:
 
-	def __init__(self, collisions: bool = True,e = 1,*particles):
+	def __init__(self, collisions: bool = True,e = 1,*particles,name : str):
 		self.particles = []
 		self.obstacles = []
+		self.name = name
 		self.collisions = collisions
 		self.cont = _container(((-10000,10000), (10000,-10000)),(255,255,255))
 		self.e = e
 		for p in particles:
 			self.add(p)
+	
+	def __str__(self):
+		return self.name
 	
 	def add(self, body):
 		if issubclass(type(body), obstacle):

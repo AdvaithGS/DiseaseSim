@@ -4,9 +4,9 @@ import pygame
 from random import sample,choice
 
 NumInfected = 1
-NumParticles = 30
+NumParticles = 20
 Speed = 3
-InfRate = 0.2
+InfRate = 0.8
 DetRate = 0.8
 FramesRecover = 500
 Quarn = False
@@ -15,24 +15,24 @@ Quarn = False
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 # Creates first pool object
-quarantine = prt.pool(e = 1)
+quarantine = prt.pool(e = 1,name = "Quarantine")
 quarantine.setdomain(((-450,100), (-200,-100)),WHITE)
 
 # Creates second pool object
-pool1 = prt.pool(e = 1)
+pool1 = prt.pool(e = 1,name = "Pool 1")
 pool1.setdomain(((-150, 375), (150, 50)),WHITE)
 
-pool2 = prt.pool(e = 1)
+pool2 = prt.pool(e = 1,name = "Pool 2")
 pool2.setdomain(((-150,0), (150, -325)),WHITE)
 
-pool3 = prt.pool(e = 1)
+pool3 = prt.pool(e = 1,name = "Pool 3")
 pool3.setdomain(((175,375), (475, 50)),WHITE)
 
-pool4 = prt.pool(e = 1)
+pool4 = prt.pool(e = 1,name = "Pool 4")
 pool4.setdomain(((175,0), (475, -325)),WHITE)
 
 #Background
-background = prt.pool(collisions= False,e = 1)
+background = prt.pool(collisions= False,e = 1,name = "Background")
 background.setdomain(((-500,400), (500, -400)),color = BLACK)
 
 # Initializes particles randomly
@@ -60,6 +60,7 @@ def Quarantine():
 
 pools = [pool1,pool2,pool3,pool4,quarantine,background]
 particle_pools  = [pool1,pool2,pool3,pool4]
+
 for i in sample(pool1.particles + pool2.particles,NumInfected):
 	i.status = "Infected"
 	i.infected = 0
@@ -88,11 +89,10 @@ buttons = [gui.Button(60, 100, 200, 50, 'Start', Start),gui.Button(60, 30, 200, 
 while True:
 	i += 1
 	pygame.time.Clock().tick(144)
-	if(not(i%50)):
+	if(not(i%100)):
 		while((x:=choice(choice(particle_pools).particles)).status == "Recovered"):
 			pass
 		x.move(choice([i for i in particle_pools if i != x.pool]),background)
-		
 
 
 	for event in pygame.event.get():
@@ -101,8 +101,6 @@ while True:
 			pygame.quit()
 			quit()
 
-	if i == 1000:
-		pool1.particles[0].move(quarantine,background)
 
 	for b in buttons:
 			b.process(i)
