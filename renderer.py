@@ -65,8 +65,6 @@ def update(background = (0,0,0)):
 	schermo.fill(background)
 
 def drawpool(pool):
-	pygame.draw.circle(schermo,(255,0,0),(28,723), 1)
-	pygame.draw.circle(schermo,(255,0,0),(28,723), 1)
 	for p in pool.particles:
 		pygame.draw.circle(schermo, p.color, (int(p.x) + OFFW, -int(p.y) + OFFH), int(p.r))
 
@@ -76,7 +74,7 @@ def drawpool(pool):
 				pygame.draw.line(schermo, b.color, (int(b.x0) + OFFW, -int(b.y) + OFFH), (int(b.x1) + OFFW, -int(b.y) + OFFH), 4)
 			elif b.axys == 0:
 				pygame.draw.line(schermo, b.color, (int(b.x) + OFFW, -int(b.y0) + OFFH), (int(b.x) + OFFW, -int(b.y1) + OFFH), 4)
-
+	# pygame.draw.circle(schermo,pool.dot_color,(pool.cont.x1+402,pool.cont.y1+603),5 )
 	pygame.draw.rect(schermo, pool.cont.color, offsetrect(pool.cont, OFFW, OFFH), 2)
 
 def offsetrect(rect, dx, dy):
