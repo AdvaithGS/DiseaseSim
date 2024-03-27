@@ -16,27 +16,27 @@ GraphInterval = 10
 WHITE = (255,255,255)
 BLACK = (0,0,0)
 # Creates first pool object
-quarantine = prt.pool(e = 1,name = "Quarantine")
+quarantine = prt.pool(e = 1,name = "Quarantine",dot_color=(0,0,0))
 quarantine.setdomain(((-450,200), (-200,0)),WHITE)
 
 # Creates second pool object
-pool1 = prt.pool(e = 1,name = "Pool 1")
+pool1 = prt.pool(e = 1,name = "Pool 1",dot_color=(0,255,0))
 pool1.setdomain(((-150, 375), (150, 50)),WHITE)
 
-pool2 = prt.pool(e = 1,name = "Pool 2")
+pool2 = prt.pool(e = 1,name = "Pool 2",dot_color=(255,0,0))
 pool2.setdomain(((-150,0), (150, -325)),WHITE)
 
-pool3 = prt.pool(e = 1,name = "Pool 3")
+pool3 = prt.pool(e = 1,name = "Pool 3",dot_color=(0,0,255))
 pool3.setdomain(((175,375), (475, 50)),WHITE)
 
-pool4 = prt.pool(e = 1,name = "Pool 4")
+pool4 = prt.pool(e = 1,name = "Pool 4",dot_color = (0,128,128))
 pool4.setdomain(((175,0), (475, -325)),WHITE)
 
 #Background
-background = prt.pool(collisions= False,e = 1,name = "Background")
+background = prt.pool(collisions= False,e = 1,name = "Background",dot_color=(0,0,0))
 background.setdomain(((-500,400), (500, -400)),color = BLACK)
 
-pool5 = prt.pool(e = 1,name = "Pool 5")
+pool5 = prt.pool(e = 1,name = "Pool 5",dot_color=(0,0,0))
 pool5.setdomain(((-475,-100), (-175, -325)),WHITE)
 
 
