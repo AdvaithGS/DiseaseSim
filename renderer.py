@@ -1,6 +1,6 @@
 import pygame 
 import particles
-
+from math import ceil
 pygame.init()
 
 # inizializzazione pygame e finestra
@@ -65,9 +65,10 @@ def update(background = (0,0,0)):
 	schermo.fill(background)
 
 def drawpool(pool):
+	pygame.draw.circle(schermo,(255,0,0),(28,723), 1)
+	pygame.draw.circle(schermo,(255,0,0),(28,723), 1)
 	for p in pool.particles:
 		pygame.draw.circle(schermo, p.color, (int(p.x) + OFFW, -int(p.y) + OFFH), int(p.r))
-	# pygame.draw.circle(schermo,(0,255,0),(pool.cont.x0,pool.cont.y0),5)
 
 	for b in pool.obstacles:
 		if type(b) == particles.barrier:
@@ -80,3 +81,15 @@ def drawpool(pool):
 
 def offsetrect(rect, dx, dy):
 	return (rect.x0 + dx, -rect.y0 + dy), (rect.x1 - rect.x0, -rect.y1 + rect.y0)
+
+# pool5 = prt.pool(e = 1,name = "Pool 4")
+# pool5.setdomain(((-475,-100), (-175, -325)),WHITE)
+def drawgraph(d,frame,NumTotal,history,new):
+	frame = frame/10
+	if(new):
+		history.append((round(220*d[1]/NumTotal),round(220*d[0]/NumTotal))) #infected, susceptible
+	for i in range(len(history)):
+		pygame.draw.line(schermo,(255,0,0),(27+i,723), (27+i, 723 - history[i][0])) 
+		pygame.draw.line(schermo,(0,0,255),(27+i, 723 - history[i][0]), (27+i, 723 - history[i][0] - history[i][1] ))
+		pygame.draw.line(schermo,(128,128,128),(27+i, 723 - history[i][0] - history[i][1] ), (27+i, 503) )
+	
