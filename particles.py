@@ -39,15 +39,17 @@ class particle:
 			self.status = "Recovered"
 			self.infected = 0
 		if(self.transit):
-			if(self.transit.cont.x0 <= self.x  and self.x <= self.transit.cont.x1 and self.transit.cont.y0 <= self.y and self.y <= self.transit.cont.y1):
-				self.pool.removepcl(self)
-				self.pool = self.transit
-				self.transit.particles.append(self)
+			if(self.transit.cont.x0 <= self.x  and self.x <= self.transit.cont.x1):
+				if(self.transit.cont.y1 <= self.y and self.y <= self.transit.cont.y0):
+					self.pool.removepcl(self)
+					self.pool = self.transit
+					self.transit.particles.append(self)
+					self.transit = False
 
 
 		self.color = getcolor(self.status)
 
-	def collide(self, body, E,rate,quarn,detection,quarantine):
+	def collide(self, body, E,rate,quarn,detection,quarantine,background):
 		dx, dy = self.x - body.x, self.y - body.y #vector difference in position
 		d = math.sqrt(dx**2 + dy**2)
 		
@@ -76,18 +78,12 @@ class particle:
 					self.status = "Infected"
 					self.infected = 0
 					if(quarn and random() <= detection):
-						x = self.pool
-						x.removepcl(self)
-						self.pool = quarantine
-						quarantine.particles.append(self)
+						self.move(quarantine,background)
 				else:
 					body.status = "Infected"
 					body.infected = 0
 					if(quarn and random() <= detection):
-						x = body.pool
-						x.removepcl(body)
-						body.pool = quarantine
-						quarantine.particles.append(body)
+						body.move(quarantine,background)
 
 
 def clamp(n, min, max):
@@ -169,9 +165,10 @@ class _container(obstacle):
 
 class pool:
 
-	def __init__(self, e = 1,*particles):
+	def __init__(self, collisions: bool = True,e = 1,*particles):
 		self.particles = []
 		self.obstacles = []
+		self.collisions = collisions
 		self.cont = _container(((-10000,10000), (10000,-10000)),(255,255,255))
 		self.e = e
 		for p in particles:
@@ -187,13 +184,15 @@ class pool:
 		self.particles += pool2.particles
 		self.obstacles += pool2.obstacles
 
-	def update(self,rate,frames,quarn,detection,quarantine):
+	def update(self,rate,frames,quarn,detection,quarantine,background):
 		e = self.e *.5 + .5
 		for p in self.particles:
 			p.update(frames,quarn)
+
 		for i, p in enumerate(self.particles):
-			for p2 in self.particles[i+1:]:
-				p.collide(p2, e,rate,quarn,detection,quarantine)
+			if(self.collisions):
+				for p2 in self.particles[i+1:]:
+					p.collide(p2, e,rate,quarn,detection,quarantine,background)
 
 			for b in self.obstacles:
 				b.collide(p, e)
