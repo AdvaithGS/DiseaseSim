@@ -16,7 +16,7 @@ class particle:
 		self.transit = False
 
 	def move(self,new_pool,background):
-		print("Move:",self.pool,new_pool)
+		# print("Move:",self.pool,new_pool)
 		self.pool.removepcl(self)
 		self.pool = background
 		background.particles.append(self)
@@ -38,8 +38,8 @@ class particle:
 			self.status = "Recovered"
 			self.infected = 0
 		if(self.transit):
-			if(self.transit.cont.x0 <= self.x  and self.x <= self.transit.cont.x1):
-				if(self.transit.cont.y1 <= self.y and self.y <= self.transit.cont.y0):
+			if(self.transit.cont.x0 <= self.x  and self.x <= self.transit.cont.x1 and self.transit.cont.y1 <= self.y and self.y <= self.transit.cont.y0):
+					# print("Move success:",self.transit)
 					self.pool.removepcl(self)
 					self.pool = self.transit
 					self.transit.particles.append(self)
@@ -77,14 +77,20 @@ class particle:
 					self.status = "Infected"
 					self.infected = 0
 					if(quarn and random() <= detection):
-						self.move(quarantine,background)
-						print(self.status,"Quarantine")
+						self.pool.particles.remove(self)
+						self.pool = quarantine
+						self.pool.particles.append(self)
+						# self.move(quarantine,background)
+						# print(self.status,"Quarantine")
 				else:
 					body.status = "Infected"
 					body.infected = 0
 					if(quarn and random() <= detection):
-						body.move(quarantine,background)
-						print(body.status,"Quarantine")
+						body.pool.particles.remove(body)
+						body.pool = quarantine
+						body.pool.particles.append(body)
+						# body.move(quarantine,background)
+						# print(body.status,"Quarantine")
 
 
 def clamp(n, min, max):
