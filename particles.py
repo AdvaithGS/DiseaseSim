@@ -24,10 +24,8 @@ class particle:
 		unit = [(new_pool.cont.x0 + new_pool.cont.x1)/2 - self.x,(new_pool.cont.y0 + new_pool.cont.y1)/2 - self.y]
 		unit[0] /= math.sqrt(unit[0]**2 + unit[1]**2)
 		unit[1] /= math.sqrt(unit[0]**2 + unit[1]**2)
-		print(self.xv,self.yv)
 		self.xv = velocity*unit[0]
 		self.yv = velocity*unit[1]
-		print(self.xv,self.yv)
 
 
 	def update(self,frames,quarn):
@@ -102,7 +100,6 @@ def getcolor(status):
 	elif status == "Recovered":
 		return (128,128,128)
 	else:
-		print(status)
 		return (0,0,255)
 
 class obstacle:
@@ -210,7 +207,6 @@ class pool:
 	def random(self, n, v, r, rect = None):
 		if rect is None:
 			rect = self.cont.rect
-			print(rect)
 		for _ in range(n):
 			p = particle((randint(rect[0][0], rect[1][0]), randint(rect[1][1], rect[0][1])), (uniform(-v, v), uniform(-v, v)), r,self)
 			self.add(p)

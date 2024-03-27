@@ -1,12 +1,11 @@
 import renderer as gui
 import particles as prt
 import pygame
-from random import sample
-
+from random import sample,choice
 
 NumInfected = 1
 NumParticles = 30
-Speed = 5
+Speed = 3
 InfRate = 0.2
 DetRate = 0.8
 FramesRecover = 500
@@ -60,7 +59,7 @@ def Quarantine():
 
 
 pools = [pool1,pool2,pool3,pool4,quarantine,background]
-
+particle_pools  = [pool1,pool2,pool3,pool4]
 for i in sample(pool1.particles + pool2.particles,NumInfected):
 	i.status = "Infected"
 	i.infected = 0
@@ -89,6 +88,12 @@ buttons = [gui.Button(60, 100, 200, 50, 'Start', Start),gui.Button(60, 30, 200, 
 while True:
 	i += 1
 	pygame.time.Clock().tick(144)
+	if(not(i%50)):
+		while((x:=choice(choice(particle_pools).particles)).status == "Recovered"):
+			pass
+		x.move(choice([i for i in particle_pools if i != x.pool]),background)
+		
+
 
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
