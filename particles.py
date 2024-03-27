@@ -38,7 +38,7 @@ class particle:
 			self.status = "Recovered"
 			self.infected = 0
 		if(self.transit):
-			if(self.transit.cont.x0 <= self.x  and self.x <= self.transit.cont.x1 and self.transit.cont.y1 <= self.y and self.y <= self.transit.cont.y0):
+			if(self.transit.cont.x0 + self.r <= self.x  and self.x <= self.transit.cont.x1 - self.r and self.transit.cont.y1 +self.r <= self.y and self.y <= self.transit.cont.y0 - self.r):
 					# print("Move success:",self.transit)
 					self.pool.removepcl(self)
 					self.pool = self.transit
@@ -171,10 +171,11 @@ class _container(obstacle):
 
 class pool:
 
-	def __init__(self, collisions: bool = True,e = 1,*particles,name : str):
+	def __init__(self, collisions: bool = True,e = 1,*particles,name : str,dot_color = (0,255,0)):
 		self.particles = []
 		self.obstacles = []
 		self.name = name
+		self.dot_color = dot_color
 		self.collisions = collisions
 		self.cont = _container(((-10000,10000), (10000,-10000)),(255,255,255))
 		self.e = e
